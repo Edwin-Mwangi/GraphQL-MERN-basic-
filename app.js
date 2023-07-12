@@ -2,8 +2,14 @@ const express = require('express');
 const app = express();
 const schema = require('./schema/schema')
 
-//graphql setup
-const graphqlHTTP = require('express-graphql')
+//graphql setup...older
+// const graphqlHTTP = require('express-graphql')
+
+//newer... graphQLHTTP is a func inside an obj with the same name 
+//const graphqlHTTP = require('express-graphql').graphqlHTTP;
+
+//...so using destructuring
+const { graphqlHTTP } = require('express-graphql');
 
 //graphqlHTTP used in middleware
 app.use('/graphql', graphqlHTTP({
