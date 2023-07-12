@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLString } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLSchema } = graphql;
 
 //our first obj...the book defined
 const Book = new GraphQLObjectType({
@@ -25,3 +25,10 @@ const RootQuery = new GraphQLObjectType({
         }
     }
 });
+
+//to export to app.js
+//new schema created...1st defined by destructuring from graphql at the top
+//it takes in a query option(query to allow user to make queries)
+module.exports = new GraphQLSchema({
+    query: RootQuery
+})
