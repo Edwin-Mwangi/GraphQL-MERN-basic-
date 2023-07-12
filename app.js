@@ -9,9 +9,11 @@ const graphqlHTTP = require('express-graphql')
 app.use('/graphql', graphqlHTTP({
     //we need to pass schema in graphqlHTTP
     //schema: schema //destructuring used
-    schema
+    schema,
+    graphiql: true
 }));
 
 app.listen('4000', () => {
     console.log('listening requests at port 4000')
 })
+
