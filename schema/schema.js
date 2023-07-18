@@ -2,7 +2,6 @@
 const Book = require('../models/book');
 const Author = require('../models/author');
 
-const _ = require('lodash');
 const graphql = require('graphql');
 const { 
     GraphQLObjectType,
@@ -12,25 +11,6 @@ const {
     GraphQLList, 
     GraphQLSchema 
 } = graphql;
-
-//dummy books
-var books = [
-    {name: 'ABCs of Love', genre: 'romance', id: '1',  authorId: '1'},
-    {name: 'Happy Valley', genre: 'nonfiction', id: '2', authorId: '3'},
-    {name: 'Things Fall Apart', genre: 'biography', id: '3', authorId: '2'},
-    {name: 'Hero of Ages', genre: 'fantasy', id: '4',  authorId: '3'},
-    {name: 'The Myth', genre: 'nonfiction', id: '5', authorId: '1'},
-    {name: 'AntHills of the Savannah', genre: 'biography', id: '6', authorId: '2'}
-
-]
-
-//dummy authors
-var authors = [
-    {name: 'Shredded Feet', age: 45, id: '1' },
-    {name: 'Chinua Achebe', age: 43, id: '2'},
-    {name: 'Elspeth Huxley', age: 41, id: '3' },
-
-]
 
 //our first obj...the book defined
 const BookType = new GraphQLObjectType({
@@ -42,8 +22,8 @@ const BookType = new GraphQLObjectType({
         author: {
             type: AuthorType,
             resolve(parent, args) {
-                //find author using authorId in book(find coz only 1 author)
-                return _.find(authors, {id: parent.authorId})
+                //mongoose to find single author based on authorId in book
+                return Author.findById(parent.authorId)
             }
         }
     })
@@ -61,8 +41,8 @@ const AuthorType = new GraphQLObjectType({
             //list as many books for 1 author
             type: new GraphQLList(AuthorType),
             resolve(parent, args) {
-                //filter books based on authorID(multiple books hence filter)
-                return _.filter(books, {authorId: parent.id})
+                //find books based on parent id
+                return Book.find({authorId: parent.id})
             }
         }
     })
@@ -72,37 +52,35 @@ const AuthorType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        //book field for query to get single book {Book(id:"123"){...}}
-        //type is 1 of the objs defined above
         book: {
             type: BookType,
-            args: { id: { type: GraphQLID }},//1 arg is the id
+            args: { id: { type: GraphQLID }},
             resolve( parent, args) {
-                //to get data from db...or array of books
-                //lodash is an easier alternative to vanilla js
-                return _.find(books, {id: args.id})
+                //mongodb for single query
+                return Book.findById(args.id)
             }
         },
         author: {
             type: AuthorType,
             args: { id: { type: GraphQLID }},
             resolve( parent, args) {
-                //return a must to get back data
-               return _.find(authors, {id: args.id})
+                return Author.findById(args.id)
             }
         },
         books: {
             //must bealist of books
             type: new GraphQLList(BookType),
             resolve( parent, args) {
-               return books;
+               //return all  books
+               return Book.find({})
             }
         },
         authors: {
-            //must be alist of authors
+            //must be a list of authors
             type: new GraphQLList(AuthorType),
             resolve( parent, args) {
-               return authors;
+                //all authors
+                return Author.find({})
             }
         },
     }
