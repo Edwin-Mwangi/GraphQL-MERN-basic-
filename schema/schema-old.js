@@ -1,7 +1,3 @@
-//models imported
-const Book = require('../models/book');
-const Author = require('../models/author');
-
 const _ = require('lodash');
 const graphql = require('graphql');
 const { 
@@ -108,36 +104,9 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
-//Mutation to change the data
-const Mutation = new GraphQLObjectType({
-    name:'Mutation',
-    fields: {
-        //1st mutation to define is addAuthor
-        addAuthor: {
-            //mutates authorType on params 'name' and 'age'
-            type: AuthorType,
-            args: {
-                name: {type: GraphQLString}, 
-                age: {type: GraphQLString}
-            },
-            //resolve to inject data into the author model instance
-            resolve(parent, args){
-                author = new Author({
-                    name: args.name,
-                    age: args.age
-                })
-                //mongoose method to save to db
-                return author.save();
-            }
-        }, 
-    },
-});
-
 //to export to app.js
 //new schema created...1st defined by destructuring from graphql at the top
 //it takes in a query option(query to allow user to make queries)
-//we can now export mutation
 module.exports = new GraphQLSchema({
-    query: RootQuery,
-    mutation: Mutation
+    query: RootQuery
 })
