@@ -9,7 +9,8 @@ const {
     GraphQLID, 
     GraphQLInt, 
     GraphQLList, 
-    GraphQLSchema 
+    GraphQLSchema,
+    GraphQLNonNull 
 } = graphql;
 
 //our first obj...the book defined
@@ -105,8 +106,10 @@ const Mutation = new GraphQLObjectType({
             //mutates authorType on params 'name' and 'age'
             type: AuthorType,
             args: {
-                name: {type: GraphQLString}, 
-                age: {type: GraphQLString}
+                // name: {type: GraphQLString}, ...allows null vals so loophole
+                //use NonNull type for all args
+                name: {type: new GraphQLNonNull(GraphQLString)}, 
+                age: {type: new GraphQLNonNull(GraphQLString)}
             },
             //resolve to inject data into the author model instance
             resolve(parent, args){
@@ -124,9 +127,9 @@ const Mutation = new GraphQLObjectType({
         addBook: {
             type: BookType,
             args: {
-                name: {type: GraphQLString}, 
-                genre: {type: GraphQLString},
-                authorId: {type: GraphQLID}
+                name: {type: new GraphQLNonNull(GraphQLString)}, 
+                genre: {type: new GraphQLNonNull(GraphQLString)},
+                authorId: {type: new GraphQLNonNull(GraphQLID)}
             },
             resolve(parent, args){
                 book = new Book({
@@ -140,9 +143,6 @@ const Mutation = new GraphQLObjectType({
     },
 });
 
-//to export to app.js
-//new schema created...1st defined by destructuring from graphql at the top
-//it takes in a query option(query to allow user to make queries)
 //we can now export mutation
 module.exports = new GraphQLSchema({
     query: RootQuery,
