@@ -108,7 +108,17 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
-//Mutation to change the data
+//MUTATION
+
+//example query used in graphiql
+// mutation{
+//     addAuthor(name:"Fyodor Dostoevsky", age: "56"){
+//       name
+//       age
+//     }
+//   }
+
+//mutation defined
 const Mutation = new GraphQLObjectType({
     name:'Mutation',
     fields: {
@@ -127,9 +137,28 @@ const Mutation = new GraphQLObjectType({
                     age: args.age
                 })
                 //mongoose method to save to db
-                return author.save();
+                //data saved... use return to see data added from query(check example above) oherwise data is null
+                //author.save(); 
+                return author.save();//when u query in graphiql name & age returned from hypothetical db
             }
         }, 
+        //addbook schema mutation
+        addBook: {
+            type: BookType,
+            args: {
+                name: {type: GraphQLString}, 
+                genre: {type: GraphQLString},
+                authorId: {type: GraphQLID}
+            },
+            resolve(parent, args){
+                book = new Book({
+                    name: args.name,
+                    age: args.age,
+                    authorId: args.authorId
+                })
+                return book.save();
+            }
+        },
     },
 });
 
