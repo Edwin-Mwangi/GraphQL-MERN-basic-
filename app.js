@@ -7,7 +7,7 @@ const { graphqlHTTP } = require('express-graphql');
 //mongoose and mongo db setup
 const mongoose = require ('mongoose');
 
-mongoose.connect("--conn Str--")
+mongoose.connect("mongodb+srv://edwin:<password>@node101.ejfrel0.mongodb.net/?retryWrites=true&w=majority")
 
 mongoose.connection.once('open', () => {
     console.log('connected to mongodb')

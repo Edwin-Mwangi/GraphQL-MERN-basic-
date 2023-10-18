@@ -113,7 +113,7 @@ const Mutation = new GraphQLObjectType({
             },
             //resolve to inject data into the author model instance
             resolve(parent, args){
-                author = new Author({
+                let author = new Author({
                     name: args.name,
                     age: args.age
                 })
@@ -132,7 +132,7 @@ const Mutation = new GraphQLObjectType({
                 authorId: {type: new GraphQLNonNull(GraphQLID)}
             },
             resolve(parent, args){
-                book = new Book({
+                let book = new Book({
                     name: args.name,
                     age: args.age,
                     authorId: args.authorId
